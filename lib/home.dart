@@ -5,15 +5,31 @@ import 'package:localization/Language/language_provider.dart';
 import 'package:localization/Language/language_screen.dart';
 import 'package:localization/generated/l10n.dart' as lang;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-enum Language {english,bangla}
+
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+   setLanguage();
+    super.initState();
+  }
+
+  void setLanguage()async{
+    final prefs = await SharedPreferences.getInstance();
+    String selectedCountry = prefs.getString("savedLanguage")??'English';
+
+    selectedCountry=="English"?context.read<LanguageChangeProvider>().changeLocal("en"):
+        selectedCountry== "Bangla"?context.read<LanguageChangeProvider>().changeLocal("bn"):
+    context.read<LanguageChangeProvider>().changeLocal("en");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
